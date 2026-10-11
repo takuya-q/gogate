@@ -1,0 +1,10 @@
+# Бинарные файлы
+/bin/
+gogate
+
+# Файлы IDE (VS Code, GoLand)
+.idea/
+.vscode/
+
+# Зависимости OS
+.DS_Store
