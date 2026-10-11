@@ -1,0 +1,9 @@
+listen_addr: ":8080"
+routes:
+  - path: "/api1"
+    backends:
+      - "http://localhost:8081"
+      - "http://localhost:8082"
+  - path: "/api2"
+    backends:
+      - "http://localhost:8083"
