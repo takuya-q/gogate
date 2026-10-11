@@ -2,7 +2,8 @@ package main
 
 import (
 	"log"
-
+	"net/http"
+	"github.com/takuya-q/gogate/internal/proxy"
 	"github.com/takuya-q/gogate/internal/config"
 )
 
@@ -11,11 +12,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
-
+	gw := proxy.NewGateway(cfg)
 	log.Printf("Starting API Gateway on %s", cfg.ListenAddr)
-	log.Printf("Loaded %d routes", len(cfg.Routes))
-	
-	for _, route := range cfg.Routes {
-		log.Printf("Route: %s -> %d backends", route.Path, len(route.Backends))
+	if err := http.ListenAndServe(cfg.ListenAddr, gw); err != nil {
+		log.Fatalf("Server failed: %v", err)
 	}
 }
