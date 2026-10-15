@@ -1,7 +1,7 @@
 package proxy
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -54,12 +54,12 @@ func(g *Gateaway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	backendURL, err := url.Parse(backendURLStr)
 	if err != nil {
-		log.Printf("Failed to parse backend URL %s: %v", backendURLStr, err)
+		slog.Error("Failed to parse backend URL", "url", backendURLStr, "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	log.Printf("Proxying request: %s -> %s", r.URL.Path, backendURLStr)
+	slog.Info("Proxying request", "path", r.URL.Path, "backend", backendURLStr)
 
 	proxy := httputil.NewSingleHostReverseProxy(backendURL)
 	r.Host = backendURL.Host

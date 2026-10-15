@@ -1,7 +1,7 @@
 package middleware
 
-import(
-	"log"
+import (
+	"log/slog"
 	"net"
 	"net/http"
 	"sync"
@@ -33,7 +33,7 @@ func RateLimit(next http.Handler) http.Handler {
 		}
 		limiter := getVisitor(ip)
 		if !limiter.Allow() {
-			log.Printf("Blocked request from %s: Too Many Requests", ip)
+			slog.Warn("Blocked request: Too Many Requests", "ip", ip)
 			http.Error(w, "Too Many Requests: Slow down!", http.StatusTooManyRequests)
 			return
 		}

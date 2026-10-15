@@ -1,7 +1,7 @@
 package balancer
 
 import (
-	"log"
+	"log/slog"
 	"net"
 	"net/url"
 	"sync"
@@ -66,13 +66,13 @@ func (r *RoundRobin) healthCheckLoop() {
 			conn, err := net.DialTimeout("tcp", u.Host, 2*time.Second)
 			if err != nil {
 				if b.IsAlive() {
-					log.Printf("Backend %s is DOWN", b.URL)
+					slog.Warn("Backend is DOWN", "url", b.URL)
 					b.SetAlive(false)
 				}
 			} else {
 				conn.Close()
 				if !b.IsAlive() {
-					log.Printf("Backend %s is UP", b.URL)
+					slog.Info("Backend is UP", "url", b.URL)
 					b.SetAlive(true)
 				}
 			}
